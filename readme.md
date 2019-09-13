@@ -4,7 +4,7 @@ Here we define an interface for Transformers as well as an Abstract class from w
 
 ## Installation
 
-`composer require dashifen/transformers`
+`composer require dashifen/transformer`
 
 ## Usage
 
