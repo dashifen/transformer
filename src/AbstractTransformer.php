@@ -2,7 +2,7 @@
 
 namespace Dashifen\Transformer;
 
-abstract class AbstractTransformation implements TransformerInterface {
+abstract class AbstractTransformer implements TransformerInterface {
   /**
    * canTransform
    *
