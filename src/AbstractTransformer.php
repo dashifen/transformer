@@ -48,9 +48,9 @@ abstract class AbstractTransformer implements TransformerInterface {
     // it.
 
     if ($this->canTransform($field)) {
-      return is_array($value)
-        ? $this->transformArray($field, $value)
-        : $this->{$this->getTransformationMethod($field)}($value);
+      return !is_array($value)
+        ? $this->{$this->getTransformationMethod($field)}($value)
+        : $this->transformArray($field, $value);
     }
 
     return $value;
@@ -68,11 +68,18 @@ abstract class AbstractTransformer implements TransformerInterface {
    * @return array
    */
   public function transformArray(string $field, array $values): array {
+    if ($this->canTransform($field)) {
 
-    // since what we want to do is loop over the $values array and apply the
-    // same transformation on each of it's members returning the resulting
-    // array, we're going to use array_map() since it does exactly that!
+      // since what we want to do is loop over the $values array and apply the
+      // same transformation on each of it's members returning the resulting
+      // array, we're going to use array_map() since it does exactly that!
 
-    return array_map([$this, $this->getTransformationMethod($field)], $values);
+      return array_map([$this, $this->getTransformationMethod($field)], $values);
+    }
+
+    // if we can't transform $field type data, then we just return the
+    // $values we received unaltered.
+
+    return $values;
   }
 }
