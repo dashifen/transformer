@@ -26,4 +26,17 @@ interface TransformerInterface {
    * @return mixed
    */
   public function transform (string $field, $value);
+
+  /**
+   * transformArray
+   *
+   * Passes each value within an array through a transformation based on the
+   * field name.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArray (string $field, array $values);
 }

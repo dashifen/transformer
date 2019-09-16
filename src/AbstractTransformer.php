@@ -17,6 +17,16 @@ abstract class AbstractTransformer implements TransformerInterface {
     return method_exists($this, $this->getTransformationMethod($field));
   }
 
+  /**
+   * getTransformationMethod
+   *
+   * Returns the name of a method in this class that is used to validate
+   * information labeled by $field.
+   *
+   * @param string $field
+   *
+   * @return string
+   */
   abstract protected function getTransformationMethod(string $field): string;
 
   /**
@@ -37,8 +47,32 @@ abstract class AbstractTransformer implements TransformerInterface {
     // unchanged so that, if we can't transform it, not changes are made to
     // it.
 
-    return $this->canTransform($field)
-      ? $this->{$this->getTransformationMethod($field)}($value)
-      : $value;
+    if ($this->canTransform($field)) {
+      return is_array($value)
+        ? $this->transformArray($field, $value)
+        : $this->{$this->getTransformationMethod($field)}($value);
+    }
+
+    return $value;
+  }
+
+  /**
+   * transformArray
+   *
+   * Passes each value within an array through a transformation based on the
+   * field name.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArray(string $field, array $values): array {
+
+    // since what we want to do is loop over the $values array and apply the
+    // same transformation on each of it's members returning the resulting
+    // array, we're going to use array_map() since it does exactly that!
+
+    return array_map([$this, $this->getTransformationMethod($field)], $values);
   }
 }
