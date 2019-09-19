@@ -18,6 +18,30 @@ interface TransformerInterface {
   public function canTransform (string $field, bool $forStorage = true): bool;
 
   /**
+   * canTransformForStorage
+   *
+   * This is a convenience method that calls canTransform passing a set flag
+   * for the $forStorage argument.
+   *
+   * @param string $field
+   *
+   * @return bool
+   */
+  public function canTransformForStorage (string $field): bool;
+
+  /**
+   * canTransformFromStorage
+   *
+   * This is a convenience method that calls canTransform passing an unset flag
+   * for the $forStorage argument.
+   *
+   * @param string $field
+   *
+   * @return bool
+   */
+  public function canTransformFromStorage (string $field): bool;
+
+  /**
    * transform
    *
    * Passed the value through a transformation based on the field name.  This
@@ -71,5 +95,31 @@ interface TransformerInterface {
    *
    * @return array
    */
-  public function transformArray (string $field, array $values, bool $forStorage = true);
+  public function transformArray (string $field, array $values, bool $forStorage = true): array;
+
+  /**
+   * transformArrayForStorage
+   *
+   * This is a convenience method that calls the transformArray() method
+   * passing a set flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArrayForStorage (string $field, array $values): array;
+
+  /**
+   * transformArrayFromStorage
+   *
+   * This is a convenience method that calls the transformArray() method
+   * passing an unset flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArrayFromStorage (string $field, array $values): array;
 }

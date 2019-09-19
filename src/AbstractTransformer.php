@@ -20,6 +20,35 @@ abstract class AbstractTransformer implements TransformerInterface {
   }
 
   /**
+   * canTransformForStorage
+   *
+   * This is a convenience method that calls canTransform passing a set flag
+   * for the $forStorage argument.
+   *
+   * @param string $field
+   *
+   * @return bool
+   */
+  public function canTransformForStorage (string $field): bool {
+    return $this->canTransform($field, true);
+  }
+
+  /**
+   * canTransformFromStorage
+   *
+   * This is a convenience method that calls canTransform passing an unset flag
+   * for the $forStorage argument.
+   *
+   * @param string $field
+   *
+   * @return bool
+   */
+  public function canTransformFromStorage (string $field): bool {
+    return $this->canTransform($field, false);
+  }
+
+
+  /**
    * getTransformationMethod
    *
    * Returns the name of a method in this class that is used to validate
@@ -53,12 +82,14 @@ abstract class AbstractTransformer implements TransformerInterface {
     // our value through the transformation method (using variable method
     // naming) and return the results.  otherwise, we just return the value
     // unchanged so that, if we can't transform it, not changes are made to
-    // it.
+    // it.  notice that we pass around the $forStorage parameter so that the
+    // directionality of this transformation is maintained across multiple
+    // methods.
 
-    if ($this->canTransform($field)) {
+    if ($this->canTransform($field, $forStorage)) {
       return !is_array($value)
         ? $this->{$this->getTransformationMethod($field, $forStorage)}($value)
-        : $this->transformArray($field, $value);
+        : $this->transformArray($field, $value, $forStorage);
     }
 
     return $value;
@@ -121,5 +152,35 @@ abstract class AbstractTransformer implements TransformerInterface {
     // $values we received unaltered.
 
     return $values;
+  }
+
+  /**
+   * transformArrayForStorage
+   *
+   * This is a convenience method that calls the transformArray() method
+   * passing a set flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArrayForStorage (string $field, array $values): array {
+    return $this->transformArray($field, $values, true);
+  }
+
+  /**
+   * transformArrayFromStorage
+   *
+   * This is a convenience method that calls the transformArray() method
+   * passing an unset flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param array  $values
+   *
+   * @return array
+   */
+  public function transformArrayFromStorage (string $field, array $values): array {
+    return $this->transformArray($field, $values, false);
   }
 }
