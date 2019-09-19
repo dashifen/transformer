@@ -77,20 +77,20 @@ abstract class AbstractTransformer implements TransformerInterface {
    * @return mixed
    */
   public function transform (string $field, $value, bool $forStorage = true) {
-
-    // if we can transform data that's labeled by our field, then we'll pass
-    // our value through the transformation method (using variable method
-    // naming) and return the results.  otherwise, we just return the value
-    // unchanged so that, if we can't transform it, not changes are made to
-    // it.  notice that we pass around the $forStorage parameter so that the
-    // directionality of this transformation is maintained across multiple
-    // methods.
-
     if ($this->canTransform($field, $forStorage)) {
+
+      // if we can transform data that's labeled by our field, then we'll pass
+      // that value through the identified method.  if $value is an array, we
+      // can pass it over to the method below to transform each of its values.
+
       return !is_array($value)
         ? $this->{$this->getTransformationMethod($field, $forStorage)}($value)
         : $this->transformArray($field, $value, $forStorage);
     }
+
+    // otherwise, we return the original value unharmed.  this allows us to
+    // call this method in a loop passing it each field/value pair and only
+    // altering the ones for which we actually have a transformation method.
 
     return $value;
   }
