@@ -65,6 +65,36 @@ abstract class AbstractTransformer implements TransformerInterface {
   }
 
   /**
+   * transformForStorage
+   *
+   * This is a convenience method that calls the transform() method passing a
+   * set flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param        $value
+   *
+   * @return mixed
+   */
+  public function transformForStorage (string $field, $value) {
+    return $this->transform($field, $value, true);
+  }
+
+  /**
+   * transformFromStorage
+   *
+   * This is a convenience method that calls the transform() method passing an
+   * unset flag for the $forStorage argument.
+   *
+   * @param string $field
+   * @param        $value
+   *
+   * @return mixed
+   */
+  public function transformFromStorage (string $field, $value) {
+    return $this->transform($field, $value, false);
+  }
+
+  /**
    * transformArray
    *
    * Passes each value within an array through a transformation based on the
