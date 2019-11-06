@@ -8,7 +8,7 @@ Here we define an interface for Transformers as well as an Abstract class from w
 
 ## Usage
 
-You can either extend the `AbstractTransformer` object or simply implement the `AbstractInterface` on your own.  The interface defines two methods:
+You can either extend the `AbstractTransformer` object or simply implement the `TransformerInterface` on your own.  The interface defines two methods:
 
 1. `canTransform` - returns a Boolean value to tell the calling scope if data can be transformed based on a `$field` parameter.
 2. `transform` - returns a transformed `$value` based on a `$field` parameter.
