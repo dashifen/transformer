@@ -6,5 +6,5 @@ use Dashifen\Exception\Exception;
 
 class TransformerException extends Exception
 {
-    public const UNKNOWN_TRANSFORMATION = 1;
+  public const UNKNOWN_TRANSFORMATION = 1;
 }
