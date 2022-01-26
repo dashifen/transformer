@@ -6,6 +6,21 @@ use Dashifen\Transformer\TransformerException;
 
 abstract class AbstractStorageTransformer implements StorageTransformerInterface
 {
+  protected bool $throw = false;
+  
+  /**
+   * setThrow
+   *
+   * Sets the throw property.
+   *
+   * @param bool $throw
+   *
+   * @return void
+   */
+  public function setThrow(bool $throw): void
+  {
+    $this->throw = $throw;
+  }
   /**
    * canTransform
    *
@@ -35,7 +50,7 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    */
   public function canTransformForStorage(string $field): bool
   {
-    return $this->canTransform($field, true);
+    return $this->canTransform($field);
   }
   
   /**
@@ -79,12 +94,11 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    * @param string $field
    * @param mixed  $value
    * @param bool   $forStorage
-   * @param bool   $throw
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $forStorage = true, bool $throw = false)
+  public function transform(string $field, $value, bool $forStorage = true)
   {
     if ($this->canTransform($field, $forStorage)) {
       
@@ -103,7 +117,7 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
     // field/value pair and only altering the ones for which we actually
     // have a transformation method.
     
-    if ($throw) {
+    if ($this->throw) {
       throw new TransformerException(
         sprintf('Cannot transform %s', $field),
         TransformerException::UNKNOWN_TRANSFORMATION
@@ -127,7 +141,7 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    */
   public function transformForStorage(string $field, $value)
   {
-    return $this->transform($field, $value, true);
+    return $this->transform($field, $value);
   }
   
   /**
@@ -157,12 +171,11 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    * @param string $field
    * @param array  $values
    * @param bool   $forStorage
-   * @param bool   $throw
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $forStorage = true, bool $throw = false): array
+  public function transformArray(string $field, array $values, bool $forStorage = true): array
   {
     
     // while it's likely that we're here because someone called the
@@ -175,7 +188,7 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
       return array_map([$this, $this->getTransformationMethod($field, $forStorage)], $values);
     }
     
-    if ($throw) {
+    if ($this->throw) {
       throw new TransformerException(
         sprintf('Cannot transform %s', $field),
         TransformerException::UNKNOWN_TRANSFORMATION
@@ -199,7 +212,7 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    */
   public function transformArrayForStorage(string $field, array $values): array
   {
-    return $this->transformArray($field, $values, true);
+    return $this->transformArray($field, $values);
   }
   
   /**

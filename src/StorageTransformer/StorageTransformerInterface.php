@@ -55,12 +55,11 @@ interface StorageTransformerInterface extends TransformerInterface
    * @param string $field
    * @param mixed  $value
    * @param bool   $forStorage
-   * @param bool   $throw
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $forStorage = true, bool $throw = false);
+  public function transform(string $field, $value, bool $forStorage = true);
   
   /**
    * transformForStorage
@@ -100,12 +99,11 @@ interface StorageTransformerInterface extends TransformerInterface
    * @param string $field
    * @param array  $values
    * @param bool   $forStorage
-   * @param bool   $throw
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $forStorage = true, bool $throw = false): array;
+  public function transformArray(string $field, array $values, bool $forStorage = true): array;
   
   /**
    * transformArrayForStorage

@@ -4,6 +4,22 @@ namespace Dashifen\Transformer;
 
 abstract class AbstractTransformer implements TransformerInterface
 {
+  protected bool $throw = false;
+  
+  /**
+   * setThrow
+   *
+   * Sets the throw property.
+   *
+   * @param bool $throw
+   *
+   * @return void
+   */
+  public function setThrow(bool $throw): void
+  {
+    $this->throw = $throw;
+  }
+  
   /**
    * canTransform
    *
@@ -17,7 +33,6 @@ abstract class AbstractTransformer implements TransformerInterface
   {
     return method_exists($this, $this->getTransformationMethod($field));
   }
-  
   
   /**
    * getTransformationMethod
@@ -38,12 +53,11 @@ abstract class AbstractTransformer implements TransformerInterface
    *
    * @param string $field
    * @param mixed  $value
-   * @param bool   $throw
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $throw = false)
+  public function transform(string $field, $value)
   {
     if ($this->canTransform($field)) {
       
@@ -63,7 +77,7 @@ abstract class AbstractTransformer implements TransformerInterface
     // field/value pair and only altering the ones for which we actually
     // have a transformation method.
     
-    if ($throw) {
+    if ($this->throw) {
       throw new TransformerException(
         sprintf('Cannot transform %s', $field),
         TransformerException::UNKNOWN_TRANSFORMATION
@@ -81,12 +95,11 @@ abstract class AbstractTransformer implements TransformerInterface
    *
    * @param string $field
    * @param array  $values
-   * @param bool   $throw
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $throw = false): array
+  public function transformArray(string $field, array $values): array
   {
     
     // while it's likely that we're here because someone called the
@@ -99,7 +112,7 @@ abstract class AbstractTransformer implements TransformerInterface
       return array_map([$this, $this->getTransformationMethod($field)], $values);
     }
     
-    if ($throw) {
+    if ($this->throw) {
       throw new TransformerException(
         sprintf('Cannot transform %s', $field),
         TransformerException::UNKNOWN_TRANSFORMATION

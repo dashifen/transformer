@@ -5,6 +5,17 @@ namespace Dashifen\Transformer;
 interface TransformerInterface
 {
   /**
+   * setThrow
+   *
+   * Sets the throw property.
+   *
+   * @param bool $throw
+   *
+   * @return void
+   */
+  public function setThrow(bool $throw): void;
+  
+  /**
    * canTransform
    *
    * Returns true if this object can transform data identified by the field
@@ -22,12 +33,11 @@ interface TransformerInterface
    *
    * @param string $field
    * @param mixed  $value
-   * @param bool   $throw
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $throw = false);
+  public function transform(string $field, $value);
   
   /**
    * transformArray
@@ -37,10 +47,9 @@ interface TransformerInterface
    *
    * @param string $field
    * @param array  $values
-   * @param bool   $throw
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $throw = false): array;
+  public function transformArray(string $field, array $values): array;
 }
