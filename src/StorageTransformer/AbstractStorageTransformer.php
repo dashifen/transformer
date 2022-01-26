@@ -94,11 +94,12 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    * @param string $field
    * @param mixed  $value
    * @param bool   $forStorage
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $forStorage = true)
+  public function transform(string $field, $value, bool $forStorage = true, ...$parameters)
   {
     if ($this->canTransform($field, $forStorage)) {
       
@@ -107,8 +108,8 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
       // can pass it over to the method below to transform each of its values.
       
       return !is_array($value)
-        ? $this->{$this->getTransformationMethod($field, $forStorage)}($value)
-        : $this->transformArray($field, $value, $forStorage);
+        ? $this->{$this->getTransformationMethod($field, $forStorage)}($value, ...$parameters)
+        : $this->transformArray($field, $value, $forStorage, $parameters);
     }
     
     // otherwise, we return the original value unharmed or throw an
@@ -135,13 +136,14 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    *
    * @param string $field
    * @param        $value
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transformForStorage(string $field, $value)
+  public function transformForStorage(string $field, $value, ...$parameters)
   {
-    return $this->transform($field, $value);
+    return $this->transform($field, $value, ...$parameters);
   }
   
   /**
@@ -152,13 +154,14 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    *
    * @param string $field
    * @param        $value
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transformFromStorage(string $field, $value)
+  public function transformFromStorage(string $field, $value, ...$parameters)
   {
-    return $this->transform($field, $value, false);
+    return $this->transform($field, $value, false, ...$parameters);
   }
   
   /**
@@ -171,11 +174,12 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    * @param string $field
    * @param array  $values
    * @param bool   $forStorage
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $forStorage = true): array
+  public function transformArray(string $field, array $values, bool $forStorage = true, ...$parameters): array
   {
     
     // while it's likely that we're here because someone called the
@@ -185,7 +189,9 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
     // value within the array or the original values without alteration.
     
     if ($this->canTransform($field)) {
-      return array_map([$this, $this->getTransformationMethod($field, $forStorage)], $values);
+      foreach ($values as &$value) {
+        $value = $this->{$this->getTransformationMethod($field, $forStorage)}($value, ...$parameters);
+      }
     }
     
     if ($this->throw) {
@@ -206,13 +212,14 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    *
    * @param string $field
    * @param array  $values
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArrayForStorage(string $field, array $values): array
+  public function transformArrayForStorage(string $field, array $values, ...$parameters): array
   {
-    return $this->transformArray($field, $values);
+    return $this->transformArray($field, $values, ...$parameters);
   }
   
   /**
@@ -223,11 +230,12 @@ abstract class AbstractStorageTransformer implements StorageTransformerInterface
    *
    * @param string $field
    * @param array  $values
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArrayFromStorage(string $field, array $values): array
+  public function transformArrayFromStorage(string $field, array $values, ...$parameters): array
   {
     return $this->transformArray($field, $values, false);
   }

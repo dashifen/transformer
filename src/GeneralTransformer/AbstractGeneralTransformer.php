@@ -55,11 +55,12 @@ abstract class AbstractGeneralTransformer implements GeneralTransformerInterface
    *
    * @param string $field
    * @param mixed  $value
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value)
+  public function transform(string $field, $value, ...$parameters)
   {
     if ($this->canTransform($field)) {
       
@@ -69,8 +70,8 @@ abstract class AbstractGeneralTransformer implements GeneralTransformerInterface
       // of its values.
       
       return !is_array($value)
-        ? $this->{$this->getTransformationMethod($field)}($value)
-        : $this->transformArray($field, $value);
+        ? $this->{$this->getTransformationMethod($field)}($value, ...$parameters)
+        : $this->transformArray($field, $value, ...$parameters);
     }
     
     // otherwise, we return the original value unharmed or throw an
@@ -97,13 +98,13 @@ abstract class AbstractGeneralTransformer implements GeneralTransformerInterface
    *
    * @param string $field
    * @param array  $values
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values): array
+  public function transformArray(string $field, array $values, ...$parameters): array
   {
-    
     // while it's likely that we're here because someone called the
     // transform method above, we'll want to be sure to double-check that
     // we can do so in case someone called this one directly.  then, if we
@@ -111,7 +112,9 @@ abstract class AbstractGeneralTransformer implements GeneralTransformerInterface
     // value within the array or the original values without alteration.
     
     if ($this->canTransform($field)) {
-      return array_map([$this, $this->getTransformationMethod($field)], $values);
+      foreach ($values as &$value) {
+        $value = $this->{$this->getTransformationMethod($field)}($value, ...$parameters);
+      }
     }
     
     if ($this->throw) {
