@@ -1,8 +1,10 @@
 <?php
 
-namespace Dashifen\Transformer;
+namespace Dashifen\Transformer\GeneralTransformer;
 
-abstract class AbstractTransformer implements TransformerInterface
+use Dashifen\Transformer\TransformerException;
+
+abstract class AbstractGeneralTransformer implements GeneralTransformerInterface
 {
   protected bool $throw = false;
   

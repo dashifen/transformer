@@ -2,8 +2,8 @@
 
 namespace Dashifen\Transformer\StorageTransformer;
 
-use Dashifen\Transformer\TransformerInterface;
 use Dashifen\Transformer\TransformerException;
+use Dashifen\Transformer\TransformerInterface;
 
 interface StorageTransformerInterface extends TransformerInterface
 {
@@ -55,11 +55,12 @@ interface StorageTransformerInterface extends TransformerInterface
    * @param string $field
    * @param mixed  $value
    * @param bool   $forStorage
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transform(string $field, $value, bool $forStorage = true);
+  public function transform(string $field, $value, bool $forStorage = true, ...$parameters);
   
   /**
    * transformForStorage
@@ -69,11 +70,12 @@ interface StorageTransformerInterface extends TransformerInterface
    *
    * @param string $field
    * @param        $value
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transformForStorage(string $field, $value);
+  public function transformForStorage(string $field, $value, ...$parameters);
   
   /**
    * transformFromStorage
@@ -83,11 +85,12 @@ interface StorageTransformerInterface extends TransformerInterface
    *
    * @param string $field
    * @param        $value
+   * @param array  $parameters
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function transformFromStorage(string $field, $value);
+  public function transformFromStorage(string $field, $value, ...$parameters);
   
   /**
    * transformArray
@@ -99,11 +102,12 @@ interface StorageTransformerInterface extends TransformerInterface
    * @param string $field
    * @param array  $values
    * @param bool   $forStorage
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArray(string $field, array $values, bool $forStorage = true): array;
+  public function transformArray(string $field, array $values, bool $forStorage = true, ...$parameters): array;
   
   /**
    * transformArrayForStorage
@@ -113,11 +117,12 @@ interface StorageTransformerInterface extends TransformerInterface
    *
    * @param string $field
    * @param array  $values
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArrayForStorage(string $field, array $values): array;
+  public function transformArrayForStorage(string $field, array $values, ...$parameters): array;
   
   /**
    * transformArrayFromStorage
@@ -127,9 +132,10 @@ interface StorageTransformerInterface extends TransformerInterface
    *
    * @param string $field
    * @param array  $values
+   * @param array  $parameters
    *
    * @return array
    * @throws TransformerException
    */
-  public function transformArrayFromStorage(string $field, array $values): array;
+  public function transformArrayFromStorage(string $field, array $values, ...$parameters): array;
 }
